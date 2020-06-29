@@ -70,66 +70,38 @@ public class Logic {
 
     public boolean isWin() {
         int[][] table = this.convert();
-        boolean result = true;
-        for (int row = 0; row < table.length; row++) {
-            if (table[row][0] != 1) {
-                for (int column = 0; column < table.length; column++) {
-                    if (table[row][column] == 1) {
-                        for (int rowWin = 0; rowWin < table.length; rowWin++) {
-                            if (table[rowWin][column] != 1) {
-                                result = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else  {
-                int winRowFixed = row;
-                for (int column = 1; column < table.length; column++) {
-                    if (table[winRowFixed][column] != 1){
-                        result = false;
-                        break;
-                    }
-                }
+        boolean result = false;
+        for (int index = 0; index < table.length; index++) {
+            if (monoHorizontal(table, index) || monoVertical(table, index)) {
+                result = true;
+                break;
             }
         }
         return result;
     }
 
-//    public static boolean monoHorizontal(char[][] board) {
-//        boolean result = true;
-//        for (int column = 0; column < board.length; column++) {
-//            if (board[row][column] != 1) {
-//                result = false;
-//                break;
-//            }
-//        }
-//        return result;
-//    }
-//
-//    public static boolean monoVertical(char[][] board) {
-//        boolean result = true;
-//        for (int row = 0; row < board.length; row++) {
-//            for (int column = 0; column < board.length; column++) {
-//                if (board[row][column] != 1) {
-//                    result = false;
-//                    break;
-//                }
-//            }
-//        }
-//        return result;
-//    }
-//
-//    public static boolean isWin(char[][] board) {
-//        boolean result = false;
-//        for (int index = 0; index < board.length; index++) {
-//            if (monoHorizontal(board, index) || monoVertical(board, index)) {
-//                result = true;
-//                break;
-//            }
-//        }
-//        return result;
-//    }
+
+    public static boolean monoHorizontal(int[][] table, int row) {
+        boolean result = true;
+        for (int column = 0; column < table.length; column++) {
+            if (table[row][column] != 1) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public static boolean monoVertical(int[][] table, int column) {
+        boolean result = true;
+        for (int row = 0; row < table.length; row++) {
+                if (table[row][column] != 1) {
+                    result = false;
+                    break;
+                }
+        }
+        return result;
+    }
 
     public int[][] convert() {
         int[][] table = new int[this.size][this.size];
