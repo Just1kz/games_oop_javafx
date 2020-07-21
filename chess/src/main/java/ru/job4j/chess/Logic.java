@@ -30,9 +30,9 @@ public class Logic {
         this.figures[index] = this.figures[index].copy(dest);
     }
 
-    private boolean isFree(Cell[] steps) {
+    private boolean isFree(Cell[] steps) throws FigureNotFoundException {
         for (Cell cell : steps) {
-            if (findBy2(cell) >= 0) {
+            if (findBy(cell) >= 0) {
                 return false;
             }
         }
@@ -52,16 +52,4 @@ public class Logic {
         }
         throw new FigureNotFoundException();
     }
-
-    private int findBy2(Cell cell) {
-        int rst = -1;
-        for (int index = 0; index != this.figures.length; index++) {
-            if (this.figures[index] != null && this.figures[index].position().equals(cell)) {
-                rst = index;
-                break;
-            }
-        }
-        return rst;
-    }
-
 }
