@@ -20,26 +20,19 @@ public class Logic {
         this.figures[this.index++] = figure;
     }
 
-    public boolean move(Cell source, Cell dest) {
-        boolean rst = false;
-        try {
-            int index = this.findBy(source);
-            if (index != -1) {
-                Cell[] steps = this.figures[index].way(source, dest);
-                if (steps.length > 0 && steps[steps.length - 1].equals(dest) && isFree(steps)) {
-                    rst = true;
-                    this.figures[index] = this.figures[index].copy(dest);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void move(Cell source, Cell dest)
+            throws FigureNotFoundException, ImpossibleMoveException, OccupiedCellException {
+        int index = this.findBy(source);
+        Cell[] steps = this.figures[index].way(source, dest);
+        if (!isFree(steps)) {
+            throw new OccupiedCellException();
         }
-        return rst;
+        this.figures[index] = this.figures[index].copy(dest);
     }
 
     private boolean isFree(Cell[] steps) {
         for (Cell cell : steps) {
-            if (findBy(cell) >= 0) {
+            if (findBy2(cell) >= 0) {
                 return false;
             }
         }
@@ -47,13 +40,20 @@ public class Logic {
     }
 
     public void clean() {
-        for (int position = 0; position != this.figures.length; position++) {
-            this.figures[position] = null;
-        }
+        Arrays.fill(this.figures, null);
         this.index = 0;
     }
 
-    private int findBy(Cell cell) {
+    private int findBy(Cell cell) throws FigureNotFoundException {
+        for (int index = 0; index != this.figures.length; index++) {
+            if (this.figures[index] != null && this.figures[index].position().equals(cell)) {
+                return index;
+            }
+        }
+        throw new FigureNotFoundException();
+    }
+
+    private int findBy2(Cell cell) {
         int rst = -1;
         for (int index = 0; index != this.figures.length; index++) {
             if (this.figures[index] != null && this.figures[index].position().equals(cell)) {
@@ -64,10 +64,4 @@ public class Logic {
         return rst;
     }
 
-    @Override
-    public String toString() {
-        return "Logic{" +
-                "figures=" + Arrays.toString(this.figures)
-                + '}';
-    }
 }
